@@ -14,6 +14,16 @@ class SkillTableViewCell: UITableViewCell {
     @IBOutlet weak var skillName: UILabel!
     @IBOutlet weak var progressBar: UIProgressView!
     
+    var skill: Skill? {
+        didSet {
+            if skill != nil {
+                skillName.text = skill!.name
+                skillLevel.text = "\(skill!.score)"
+                progressBar.setProgress(skill!.score.truncatingRemainder(dividingBy: 1.0), animated: true)
+            }
+        }
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

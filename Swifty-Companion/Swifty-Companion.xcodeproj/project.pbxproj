@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		5FCC8698145F4EC1F416A108 /* Pods_Swifty_Companion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7C748C51FA45CC36B9E651D /* Pods_Swifty_Companion.framework */; };
+		7B0D57551E7AE23A0078B642 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0D57541E7AE23A0078B642 /* Models.swift */; };
+		7B0D57571E7AF4D10078B642 /* ProjectTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0D57561E7AF4D10078B642 /* ProjectTableViewCell.swift */; };
 		7B279AAE1E79B7F700BE0466 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B279AAD1E79B7F700BE0466 /* AppDelegate.swift */; };
 		7B279AB01E79B7F700BE0466 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B279AAF1E79B7F700BE0466 /* ProfileViewController.swift */; };
 		7B279AB21E79B7F700BE0466 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B279AB11E79B7F700BE0466 /* SecondViewController.swift */; };
@@ -18,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7B0D57541E7AE23A0078B642 /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		7B0D57561E7AF4D10078B642 /* ProjectTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectTableViewCell.swift; sourceTree = "<group>"; };
 		7B279AAA1E79B7F700BE0466 /* Swifty-Companion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Swifty-Companion.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B279AAD1E79B7F700BE0466 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7B279AAF1E79B7F700BE0466 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
@@ -81,6 +85,8 @@
 				7B279AB81E79B7F700BE0466 /* LaunchScreen.storyboard */,
 				7B279ABB1E79B7F700BE0466 /* Info.plist */,
 				7B8D48021E7A0CC5009905BD /* SkillTableViewCell.swift */,
+				7B0D57541E7AE23A0078B642 /* Models.swift */,
+				7B0D57561E7AF4D10078B642 /* ProjectTableViewCell.swift */,
 			);
 			path = "Swifty-Companion";
 			sourceTree = "<group>";
@@ -217,6 +223,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B0D57551E7AE23A0078B642 /* Models.swift in Sources */,
+				7B0D57571E7AF4D10078B642 /* ProjectTableViewCell.swift in Sources */,
 				7B279AB21E79B7F700BE0466 /* SecondViewController.swift in Sources */,
 				7B8D48031E7A0CC5009905BD /* SkillTableViewCell.swift in Sources */,
 				7B279AAE1E79B7F700BE0466 /* AppDelegate.swift in Sources */,
