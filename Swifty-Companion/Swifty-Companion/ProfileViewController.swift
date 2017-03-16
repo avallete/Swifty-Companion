@@ -8,23 +8,31 @@
 
 import UIKit
 
-class ProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    @IBOutlet weak var skillTableView: UITableView! {
-        didSet {
-            skillTableView.delegate = self;
-            skillTableView.dataSource = self;
-        }
-    }
-    @IBOutlet weak var projectTableView: UITableView! {
-        didSet {
-            projectTableView.delegate = self;
-            projectTableView.dataSource = self;
-        }
-    }
-
-    @IBOutlet weak var profileImageView: UIImageView!
+class ProjectTableViewDelegate: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    let skillData = [
+    var data = [
+        Project(name: "This is live", score: 101, validated: true, status: "finished"),
+        Project(name: "This is l2", score: 10, validated: false, status: "finished"),
+        Project(name: "Thisve", score: 82, validated: true, status: "finished"),
+        Project(name: "Thie", score: 0, validated: false, status: "in_progress")
+    ]
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return data.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectTableViewCell", for: indexPath) as? ProjectTableViewCell {
+            cell.project = data[indexPath.item]
+            return cell;
+        }
+        return UITableViewCell();
+    }
+}
+
+class SkillTableViewDelegate: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    
+    var data = [
         Skill(name: "Entreprise", score: 5.97),
         Skill(name: "ThisIsLife", score: 12.10),
         Skill(name: "Koko & L'asticot", score: 5.45),
@@ -32,34 +40,43 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         Skill(name: "NONON lalala", score: 3.42)
     ]
     
-    let projectData = [
-        Project(name: "This is live", score: 101, validated: true, status: "finished"),
-        Project(name: "This is l2", score: 10, validated: false, status: "finished"),
-        Project(name: "Thisve", score: 82, validated: true, status: "finished"),
-        Project(name: "Thie", score: 0, validated: false, status: "in_progress")
-    ]
-    
-    private func  roundImageView(imageView: UIImageView) {
-        imageView.layer.cornerRadius = imageView.frame.size.width / 2;
-        imageView.clipsToBounds = true;
-    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return skillData.count
+        return data.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "SkillTableViewCell", for: indexPath) as? SkillTableViewCell {
-            let skill = skillData[indexPath.item];
-            cell.skill = skill
+            cell.skill = data[indexPath.item]
             return cell;
         }
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectTableViewCell", for: indexPath) as? ProjectTableViewCell {
-            let project = projectData[indexPath.item];
-            cell.project = project
-            return cell;
+        return UITableViewCell();
+    }
+}
+
+
+class ProfileViewController: UIViewController {
+    let projectTableViewDelegate = ProjectTableViewDelegate()
+    let skillTableViewDelegate = SkillTableViewDelegate()
+    
+    @IBOutlet weak var skillTableView: UITableView! {
+        didSet {
+            skillTableView.delegate = self.skillTableViewDelegate;
+            skillTableView.dataSource = self.skillTableViewDelegate;
         }
-        return UITableViewCell()
+    }
+    
+    @IBOutlet weak var projectTableView: UITableView! {
+        didSet {
+            projectTableView.delegate = self.projectTableViewDelegate;
+            projectTableView.dataSource = self.projectTableViewDelegate;
+        }
+    }
+
+    @IBOutlet weak var profileImageView: UIImageView!
+    
+    private func  roundImageView(imageView: UIImageView) {
+        imageView.layer.cornerRadius = imageView.frame.size.width / 2;
+        imageView.clipsToBounds = true;
     }
     
     override func viewDidLayoutSubviews() {
