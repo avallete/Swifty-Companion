@@ -30,6 +30,29 @@ class ProjectTableViewDelegate: UIViewController, UITableViewDataSource, UITable
     }
 }
 
+class AchievementTableViewDelegate: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    
+    var data = [
+        Project(name: "This is live", score: 101, validated: true, status: "finished"),
+        Project(name: "This is l2", score: 10, validated: false, status: "finished"),
+        Project(name: "Thisve", score: 82, validated: true, status: "finished"),
+        Project(name: "Thie", score: 0, validated: false, status: "in_progress")
+    ]
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return data.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectTableViewCell", for: indexPath) as? ProjectTableViewCell {
+            cell.project = data[indexPath.item]
+            return cell;
+        }
+        return UITableViewCell();
+    }
+}
+
+
 class SkillTableViewDelegate: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     var data = [
@@ -57,9 +80,23 @@ class SkillTableViewDelegate: UIViewController, UITableViewDataSource, UITableVi
 class ProfileViewController: UIViewController {
     let projectTableViewDelegate = ProjectTableViewDelegate()
     let skillTableViewDelegate = SkillTableViewDelegate()
+    let achievementViewDelegate = AchievementTableViewDelegate()
     
+    @IBOutlet weak var achievementTableView: UITableView! {
+        didSet {
+            achievementTableView.layer.borderWidth = 1
+            achievementTableView.layer.cornerRadius = 5.0
+            achievementTableView.layer.borderColor = UIColor(red: 24/255, green: 200/255, blue: 143/255, alpha: 1.0).cgColor
+            achievementTableView.delegate = self.achievementViewDelegate;
+            achievementTableView.dataSource = self.achievementViewDelegate;
+        }
+    }
+
     @IBOutlet weak var skillTableView: UITableView! {
         didSet {
+            skillTableView.layer.borderWidth = 1
+            skillTableView.layer.cornerRadius = 5.0
+            skillTableView.layer.borderColor = UIColor(red: 24/255, green: 200/255, blue: 143/255, alpha: 1.0).cgColor
             skillTableView.delegate = self.skillTableViewDelegate;
             skillTableView.dataSource = self.skillTableViewDelegate;
         }
@@ -67,6 +104,9 @@ class ProfileViewController: UIViewController {
     
     @IBOutlet weak var projectTableView: UITableView! {
         didSet {
+            projectTableView.layer.borderWidth = 1
+            projectTableView.layer.cornerRadius = 5.0
+            projectTableView.layer.borderColor = UIColor(red: 24/255, green: 200/255, blue: 143/255, alpha: 1.0).cgColor
             projectTableView.delegate = self.projectTableViewDelegate;
             projectTableView.dataSource = self.projectTableViewDelegate;
         }

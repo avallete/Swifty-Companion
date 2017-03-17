@@ -5,7 +5,7 @@
 //  Created by Andrew VALLETEAU on 3/16/17.
 //  Copyright © 2017 Andrew VALLETEAU. All rights reserved.
 //
-
+import UIKit
 import Foundation
 
 struct Project: CustomStringConvertible {
@@ -13,6 +13,17 @@ struct Project: CustomStringConvertible {
     let score: Float
     let validated: Bool
     let status: String
+    
+    var scoreString: String {
+        get {
+            switch status {
+            case "in_progress":
+                return "in_progress"
+            default:
+                return "\(Int(score))"
+            }
+        }
+    }
     
     var description: String {
         get {
