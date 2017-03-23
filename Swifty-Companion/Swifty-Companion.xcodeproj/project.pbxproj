@@ -16,6 +16,7 @@
 		7B279AB51E79B7F700BE0466 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B279AB31E79B7F700BE0466 /* Main.storyboard */; };
 		7B279AB71E79B7F700BE0466 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B279AB61E79B7F700BE0466 /* Assets.xcassets */; };
 		7B279ABA1E79B7F700BE0466 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B279AB81E79B7F700BE0466 /* LaunchScreen.storyboard */; };
+		7B40108B1E7D9684001EDBB1 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B40108A1E7D9684001EDBB1 /* Api.swift */; };
 		7B8D48031E7A0CC5009905BD /* SkillTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8D48021E7A0CC5009905BD /* SkillTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -30,6 +31,7 @@
 		7B279AB61E79B7F700BE0466 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7B279AB91E79B7F700BE0466 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7B279ABB1E79B7F700BE0466 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7B40108A1E7D9684001EDBB1 /* Api.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
 		7B8D48021E7A0CC5009905BD /* SkillTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkillTableViewCell.swift; sourceTree = "<group>"; };
 		D7C748C51FA45CC36B9E651D /* Pods_Swifty_Companion.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Swifty_Companion.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9F8BB45518B925FD701E5FA /* Pods-Swifty-Companion.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Swifty-Companion.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Swifty-Companion/Pods-Swifty-Companion.debug.xcconfig"; sourceTree = "<group>"; };
@@ -87,6 +89,7 @@
 				7B8D48021E7A0CC5009905BD /* SkillTableViewCell.swift */,
 				7B0D57541E7AE23A0078B642 /* Models.swift */,
 				7B0D57561E7AF4D10078B642 /* ProjectTableViewCell.swift */,
+				7B40108A1E7D9684001EDBB1 /* Api.swift */,
 			);
 			path = "Swifty-Companion";
 			sourceTree = "<group>";
@@ -228,6 +231,7 @@
 				7B279AB21E79B7F700BE0466 /* SecondViewController.swift in Sources */,
 				7B8D48031E7A0CC5009905BD /* SkillTableViewCell.swift in Sources */,
 				7B279AAE1E79B7F700BE0466 /* AppDelegate.swift in Sources */,
+				7B40108B1E7D9684001EDBB1 /* Api.swift in Sources */,
 				7B279AB01E79B7F700BE0466 /* ProfileViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

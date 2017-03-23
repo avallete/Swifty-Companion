@@ -61,3 +61,22 @@ struct UserProfile {
         return "\(Int(level)) - \(Int(level.truncatingRemainder(dividingBy:1.0) * 100))%"
     }
 }
+
+struct User {
+    let login: String
+    let id: Int
+}
+
+struct AccessToken {
+    let access_token: String
+    let expire_date: Date
+    
+    var is_valid: Bool {
+        get {
+            if expire_date > Date() {
+                return true
+            }
+            return false
+        }
+    }
+}
