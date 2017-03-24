@@ -43,15 +43,39 @@ struct Skill: CustomStringConvertible {
     }
 }
 
+struct Achievement {
+    let name: String
+    let description: String
+    let imageUrl: URL
+    var svgData: String?
+}
+
 struct UserProfile {
     let skills: [Skill]
     let projects: [Project]
+    let achievements: [Achievement]
     let login: String
     let grade: String
     let wallet: Int
     let correctionPts: Int
     let position: String
     let level: Float
+    let pictureUrl: URL
+    var pictureData: Data?
+    
+    public func getGradeString() -> String {
+        if grade == "" {
+            return "None"
+        }
+        return grade
+    }
+    
+    public func getPositionString() -> String {
+        if position == "" {
+            return "Unavailable"
+        }
+        return position
+    }
     
     public func getWalletString() -> String {
         return "\(wallet)₳"

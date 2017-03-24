@@ -6,6 +6,6 @@ target 'Swifty-Companion' do
   use_frameworks!
 
   # Pods for Swifty-Companion
-  pod 'Alamofire', '~> 4.4.0'
+  pod 'Alamofire', '4.4.0'
   pod 'AlamofireSwiftyJSON'
 end

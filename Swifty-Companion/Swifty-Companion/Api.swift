@@ -8,10 +8,11 @@
 
 import Foundation
 import Alamofire
+import SwiftyJSON
 import AlamofireSwiftyJSON
 
 protocol ApiDelegate: class {
-    func handleRequestError(from: String, err: Any)
+    func handleRequestError(from: String, err: Error?)
     func handleRequestSuccess(from: String, data: Any)
 }
 
@@ -23,6 +24,60 @@ class Api {
     private var token: AccessToken?
     weak var delegate: ApiDelegate?
     
+    private func getUsersFromResponse(dataResponse: (DataResponse<JSON>)) -> [User]{
+        var users: [User] = []
+        for (_, elem) in dataResponse.value! {
+            users.append(User(login: elem["login"].stringValue, id: Int(elem["id"].doubleValue)))
+        }
+        return users
+    }
+    
+    private func getUserProfileFromResponse(dataResponse: (DataResponse<JSON>)) -> UserProfile {
+        var skills: [Skill] = []
+        var projects: [Project] = []
+        var achievements: [Achievement] = []
+        var login: String = "None"
+        var grade: String = "None"
+        var wallet: Int = 0
+        var correctionPts: Int = 0
+        var position: String = "None"
+        var level: Float = 0.0
+        
+        login = dataResponse.value!["login"].stringValue
+        wallet = Int(dataResponse.value!["wallet"].doubleValue)
+        correctionPts = Int(dataResponse.value!["correction_point"].doubleValue)
+        position = dataResponse.value!["location"].stringValue
+        level = Float(dataResponse.value!["cursus_users"][0]["level"].doubleValue)
+        grade = dataResponse.value!["cursus_users"][0]["grade"].stringValue
+        
+        for (_, skill) in dataResponse.value!["cursus_users"][0]["skills"] {
+            skills.append(Skill(name: skill["name"].stringValue, score: Float(skill["level"].doubleValue)))
+        }
+        
+        for (_, project) in dataResponse.value!["projects_users"] {
+            
+            projects.append(Project(
+                name: project["project"]["name"].stringValue,
+                score: Float(project["final_mark"].doubleValue),
+                validated: Bool(project["validated?"].doubleValue as NSNumber),
+                status: project["status"].stringValue)
+            )
+        }
+        
+        for (_, achievement) in dataResponse.value!["achievements"] {
+            achievements.append(Achievement(
+                name: achievement["name"].stringValue,
+                description: achievement["description"].stringValue,
+                imageUrl: URL(string: achievement["image"].stringValue)!,
+                svgData: nil)
+            )
+        }
+        
+        return UserProfile(skills: skills, projects: projects, achievements: achievements, login: login,
+                           grade: grade, wallet: wallet, correctionPts: correctionPts, position: position, level: level,
+                           pictureUrl: URL(string: dataResponse.value!["image_url"].stringValue)!, pictureData: nil)
+    }
+    
     func getAccessToken() {
         if token == nil || token?.is_valid == false {
             let parameters: Parameters = [
@@ -33,54 +88,65 @@ class Api {
             
             Alamofire.request(api_url + "/oauth/token", method: .post, parameters: parameters, encoding: URLEncoding.default).responseSwiftyJSON {
                 dataResponse in
-                if (dataResponse.error == nil || dataResponse.response?.statusCode != 200) {
-                    if dataResponse.value?["expires_in"] != nil && dataResponse.value?["created_at"] != nil && dataResponse.value?["access_token"] != nil {
-                        let expire_date = Date(timeIntervalSince1970: (dataResponse.value!["expires_in"].doubleValue) + (dataResponse.value!["created_at"].doubleValue))
+                if (dataResponse.error != nil || dataResponse.response?.statusCode != 200) {
+                    self.delegate?.handleRequestError(from: "getAccessToken", err: dataResponse.error)
+                }
+                else {
+                    if dataResponse.value?["expires_in"] != nil &&
+                        dataResponse.value?["created_at"] != nil &&
+                        dataResponse.value?["access_token"] != nil {
+                        let expire_date = Date(timeIntervalSince1970: (
+                            dataResponse.value!["expires_in"].doubleValue) + (dataResponse.value!["created_at"].doubleValue
+                        ))
                         let access_token = dataResponse.value!["access_token"].stringValue
                         self.token = AccessToken(access_token: access_token, expire_date: expire_date)
                         self.delegate?.handleRequestSuccess(from: "getAccessToken", data: true)
                     }
-                }
-                else {
-                    self.delegate?.handleRequestError(from: "getAccessToken", err: dataResponse.error!)
                 }
             }
         }
     }
     
     func searchUserLogin(login: String) {
-        let parameters: Parameters = [
-            "range[login]": "\(login),\(login)z",
-            "sort": "login"
-        ]
-        let headers: HTTPHeaders = [
-            "Authorization": "Bearer \(self.token!.access_token)"
-        ]
-        
-        Alamofire.request(api_url + "/v2/users", method: .get, parameters: parameters, headers: headers).responseSwiftyJSON { dataResponse in
-            if (dataResponse.error != nil || dataResponse.response?.statusCode != 200) {
-                self.delegate?.handleRequestError(from: "searchUserLogin", err: dataResponse.error!)
-            }
-            else {
-                var users: [User] = []
-                for (_, elem) in dataResponse.value! {
-                    users.append(User(login: elem["login"].stringValue, id: Int(elem["id"].doubleValue)))
+        if self.token == nil {
+            self.delegate?.handleRequestError(from: "searchUserLogin", err: nil)
+        }
+        else {
+            let parameters: Parameters = [
+                "range[login]": "\(login),\(login)z",
+                "sort": "login"
+            ]
+            let headers: HTTPHeaders = [
+                "Authorization": "Bearer \(self.token!.access_token)"
+            ]
+            
+            Alamofire.request(api_url + "/v2/users", method: .get, parameters: parameters, headers: headers).responseSwiftyJSON { dataResponse in
+                if (dataResponse.error != nil || dataResponse.response?.statusCode != 200) {
+                    self.delegate?.handleRequestError(from: "searchUserLogin", err: dataResponse.error)
                 }
-                self.delegate?.handleRequestSuccess(from: "searchUserLogin", data: users)
+                else {
+                    self.delegate?.handleRequestSuccess(from: "searchUserLogin", data: self.getUsersFromResponse(dataResponse: dataResponse))
+                }
             }
         }
     }
     
-    func getUserInfos(user_id: Int) {
-        let headers: HTTPHeaders = [
-            "Authorization": "Bearer \(self.token?.access_token)"
-        ]
-        Alamofire.request(api_url + "/v2/users/\(user_id)", method: .get, headers: headers).responseSwiftyJSON { dataResponse in
-            if (dataResponse.error != nil || dataResponse.response?.statusCode != 200) {
-                self.delegate?.handleRequestError(from: "getUserInfos", err: dataResponse.error!)
-            }
-            else {
-                self.delegate?.handleRequestSuccess(from: "getUserInfos", data: dataResponse.value!)
+    func getUserProfile(user_id: Int) {
+        if self.token == nil {
+            self.delegate?.handleRequestError(from: "searchUserLogin", err: nil)
+        }
+        else {
+            let headers: HTTPHeaders = [
+                "Authorization": "Bearer \(self.token!.access_token)"
+            ]
+            Alamofire.request(api_url + "/v2/users/\(user_id)", method: .get, headers: headers).responseSwiftyJSON { dataResponse in
+                if (dataResponse.error != nil || dataResponse.response?.statusCode != 200) {
+                    self.delegate?.handleRequestError(from: "getUserProfile", err: dataResponse.error)
+                }
+                else {
+                    let userprofile = self.getUserProfileFromResponse(dataResponse: dataResponse)
+                    self.delegate?.handleRequestSuccess(from: "getUserProfile", data: userprofile)
+                }
             }
         }
     }
