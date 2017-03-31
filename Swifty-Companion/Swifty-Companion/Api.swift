@@ -108,6 +108,9 @@ class Api {
                 }
             }
         }
+        else {
+            self.delegate?.handleRequestSuccess(from: "getAccessToken", data: true)
+        }
     }
     
     func searchUserLogin(login: String) {
