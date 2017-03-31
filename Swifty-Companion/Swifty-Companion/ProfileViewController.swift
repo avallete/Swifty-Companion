@@ -101,16 +101,16 @@ class ProfileViewController: UIViewController, ApiDelegate {
         }
     }
 
-    @IBOutlet weak var pictureLoader: UIActivityIndicatorView!
-    @IBOutlet weak var loginLabel: UILabel!
-    @IBOutlet weak var gradeLabel: UILabel!
-    @IBOutlet weak var walletLabel: UILabel!
-    @IBOutlet weak var correctionPtsLabel: UILabel!
-    @IBOutlet weak var positionLabel: UILabel!
-    @IBOutlet weak var levelLabel: UILabel!
-    @IBOutlet weak var profileImageView: UIImageView!
+    @IBOutlet weak var  pictureLoader: UIActivityIndicatorView!
+    @IBOutlet weak var  loginLabel: UILabel!
+    @IBOutlet weak var  gradeLabel: UILabel!
+    @IBOutlet weak var  walletLabel: UILabel!
+    @IBOutlet weak var  correctionPtsLabel: UILabel!
+    @IBOutlet weak var  positionLabel: UILabel!
+    @IBOutlet weak var  levelLabel: UILabel!
+    @IBOutlet weak var  profileImageView: UIImageView!
     
-    @IBOutlet weak var achievementTableView: UITableView! {
+    @IBOutlet weak var  achievementTableView: UITableView! {
         didSet {
             achievementTableView.layer.borderWidth = 1
             achievementTableView.layer.cornerRadius = 5.0
@@ -120,7 +120,7 @@ class ProfileViewController: UIViewController, ApiDelegate {
         }
     }
 
-    @IBOutlet weak var skillTableView: UITableView! {
+    @IBOutlet weak var  skillTableView: UITableView! {
         didSet {
             skillTableView.layer.borderWidth = 1
             skillTableView.layer.cornerRadius = 5.0
@@ -130,7 +130,7 @@ class ProfileViewController: UIViewController, ApiDelegate {
         }
     }
     
-    @IBOutlet weak var projectTableView: UITableView! {
+    @IBOutlet weak var  projectTableView: UITableView! {
         didSet {
             projectTableView.layer.borderWidth = 1
             projectTableView.layer.cornerRadius = 5.0
@@ -140,16 +140,34 @@ class ProfileViewController: UIViewController, ApiDelegate {
         }
     }
     
-    private func  roundImageView(imageView: UIImageView) {
+    private func        roundImageView(imageView: UIImageView) {
+        // Just turn rectangular imageView into circle
         imageView.layer.cornerRadius = imageView.frame.size.width / 2;
         imageView.clipsToBounds = true;
     }
     
-    func handleRequestError(from: String, err: Error?) {
-        print("From: \(from) err: \(err)");
+    func                handleRequestError(from: String, err: Error?) {
+        if from == "getUserProfile" {
+            self.userId = nil
+            self.userProfile = nil
+            let alert = UIAlertController(title: "Request Error", message: "From: \(from) Err: Cannot retrieve user profile.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        else {
+            let alert = UIAlertController(title: "Request Error", message: "From: \(from) Err: \(err)", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
-    func handleRequestSuccess(from: String, data: Any) {
+    func                handleRequestSuccess(from: String, data: Any) {
+        // When token successfully retrieved. Try to get userProfile.
+        if from == "getAccessToken" {
+            if userId != nil {
+                api.getUserProfile(user_id: userId!)
+            }
+        }
         if from == "getUserProfile" {
             if data is UserProfile {
                 self.userProfile = data as? UserProfile
@@ -157,22 +175,23 @@ class ProfileViewController: UIViewController, ApiDelegate {
         }
     }
 
-    override func viewDidAppear(_ animated: Bool) {
+    override func       viewDidAppear(_ animated: Bool) {
         if userId != nil {
-            api.getUserProfile(user_id: userId!)
+            api.getAccessToken()
         }
     }
     
-    override func viewDidLayoutSubviews() {
+    override func       viewDidLayoutSubviews() {
+        // Round the picture image here to recalculate when screen mode (landscape/portrait) change.
         self.roundImageView(imageView: profileImageView);
     }
 
-    override func viewDidLoad() {
+    override func       viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
     }
 
-    override func didReceiveMemoryWarning() {
+    override func       didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }

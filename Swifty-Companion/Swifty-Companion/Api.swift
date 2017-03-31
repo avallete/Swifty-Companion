@@ -25,6 +25,7 @@ class Api {
     weak var delegate: ApiDelegate?
     
     private func getUsersFromResponse(dataResponse: (DataResponse<JSON>)) -> [User]{
+        // Handle JSON API data and turn it into an Array of User object.
         var users: [User] = []
         for (_, elem) in dataResponse.value! {
             users.append(User(login: elem["login"].stringValue, id: Int(elem["id"].doubleValue)))
@@ -33,6 +34,7 @@ class Api {
     }
     
     private func getUserProfileFromResponse(dataResponse: (DataResponse<JSON>)) -> UserProfile {
+        // Handle JSON API data and turn it into an UserProfile object.
         var skills: [Skill] = []
         var projects: [Project] = []
         var achievements: [Achievement] = []
@@ -79,6 +81,7 @@ class Api {
     }
     
     func getAccessToken() {
+        // Check if an valid token is already in cache. Else ask a new token to the API.
         if token == nil || token?.is_valid == false {
             let parameters: Parameters = [
                 "grant_type": "client_credentials",
@@ -108,12 +111,14 @@ class Api {
     }
     
     func searchUserLogin(login: String) {
+        // Search all users with login starting with 'login'
+
         if self.token == nil {
             self.delegate?.handleRequestError(from: "searchUserLogin", err: nil)
         }
         else {
             let parameters: Parameters = [
-                "range[login]": "\(login),\(login)z",
+                "range[login]": "\(login),\(login)z",  // A little bit tricky but only way to filter user login the way we want with API.
                 "sort": "login"
             ]
             let headers: HTTPHeaders = [
@@ -132,6 +137,8 @@ class Api {
     }
     
     func getUserProfile(user_id: Int) {
+        // Retrieve from API the UserProfile matching with the user_id
+
         if self.token == nil {
             self.delegate?.handleRequestError(from: "searchUserLogin", err: nil)
         }

@@ -14,7 +14,7 @@ import AlamofireSwiftyJSON
 class AchievementTableViewCell: UITableViewCell, UIWebViewDelegate {
 
     @IBOutlet weak var name: UILabel!
-    @IBOutlet weak var iconWebView: UIWebView! {
+    @IBOutlet weak var iconWebView: UIWebView! {  // Here we use webView for Achievements images to allow svg format and data caching.
         didSet {
             iconWebView.delegate = self
         }

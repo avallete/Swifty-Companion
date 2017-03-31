@@ -19,6 +19,7 @@
 		7B279ABA1E79B7F700BE0466 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B279AB81E79B7F700BE0466 /* LaunchScreen.storyboard */; };
 		7B40108B1E7D9684001EDBB1 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B40108A1E7D9684001EDBB1 /* Api.swift */; };
 		7B8D48031E7A0CC5009905BD /* SkillTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8D48021E7A0CC5009905BD /* SkillTableViewCell.swift */; };
+		7BCCB67C1E8E9CBE005BEDF7 /* LoadingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCCB67B1E8E9CBE005BEDF7 /* LoadingPageViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		7B279ABB1E79B7F700BE0466 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7B40108A1E7D9684001EDBB1 /* Api.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
 		7B8D48021E7A0CC5009905BD /* SkillTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkillTableViewCell.swift; sourceTree = "<group>"; };
+		7BCCB67B1E8E9CBE005BEDF7 /* LoadingPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingPageViewController.swift; sourceTree = "<group>"; };
 		D7C748C51FA45CC36B9E651D /* Pods_Swifty_Companion.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Swifty_Companion.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9F8BB45518B925FD701E5FA /* Pods-Swifty-Companion.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Swifty-Companion.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Swifty-Companion/Pods-Swifty-Companion.debug.xcconfig"; sourceTree = "<group>"; };
 		FD5ADDA893962736478048C4 /* Pods-Swifty-Companion.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Swifty-Companion.release.xcconfig"; path = "Pods/Target Support Files/Pods-Swifty-Companion/Pods-Swifty-Companion.release.xcconfig"; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 				7B0D57561E7AF4D10078B642 /* ProjectTableViewCell.swift */,
 				7B40108A1E7D9684001EDBB1 /* Api.swift */,
 				7B04E71C1E84741500852AAB /* AchievementTableViewCell.swift */,
+				7BCCB67B1E8E9CBE005BEDF7 /* LoadingPageViewController.swift */,
 			);
 			path = "Swifty-Companion";
 			sourceTree = "<group>";
@@ -232,6 +235,7 @@
 				7B0D57551E7AE23A0078B642 /* Models.swift in Sources */,
 				7B0D57571E7AF4D10078B642 /* ProjectTableViewCell.swift in Sources */,
 				7B279AB21E79B7F700BE0466 /* ResearchViewController.swift in Sources */,
+				7BCCB67C1E8E9CBE005BEDF7 /* LoadingPageViewController.swift in Sources */,
 				7B8D48031E7A0CC5009905BD /* SkillTableViewCell.swift in Sources */,
 				7B279AAE1E79B7F700BE0466 /* AppDelegate.swift in Sources */,
 				7B04E71D1E84741500852AAB /* AchievementTableViewCell.swift in Sources */,

@@ -8,4 +8,5 @@ target 'Swifty-Companion' do
   # Pods for Swifty-Companion
   pod 'Alamofire', '4.4.0'
   pod 'AlamofireSwiftyJSON'
+  pod 'Spring', :git => 'https://github.com/MengTo/Spring.git', :branch => 'swift3'
 end
