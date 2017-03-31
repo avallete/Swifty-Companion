@@ -5,7 +5,7 @@
 //  Created by Andrew VALLETEAU on 3/16/17.
 //  Copyright © 2017 Andrew VALLETEAU. All rights reserved.
 //
-
+import UIKit
 import Foundation
 
 struct Project: CustomStringConvertible {
@@ -13,6 +13,17 @@ struct Project: CustomStringConvertible {
     let score: Float
     let validated: Bool
     let status: String
+    
+    var scoreString: String {
+        get {
+            switch status {
+            case "in_progress":
+                return "in_progress"
+            default:
+                return "\(Int(score))"
+            }
+        }
+    }
     
     var description: String {
         get {
@@ -32,15 +43,39 @@ struct Skill: CustomStringConvertible {
     }
 }
 
+struct Achievement {
+    let name: String
+    let description: String
+    let imageUrl: URL
+    var svgData: String?
+}
+
 struct UserProfile {
     let skills: [Skill]
     let projects: [Project]
+    let achievements: [Achievement]
     let login: String
     let grade: String
     let wallet: Int
     let correctionPts: Int
     let position: String
     let level: Float
+    let pictureUrl: URL
+    var pictureData: Data?
+    
+    public func getGradeString() -> String {
+        if grade == "" {
+            return "None"
+        }
+        return grade
+    }
+    
+    public func getPositionString() -> String {
+        if position == "" {
+            return "Unavailable"
+        }
+        return position
+    }
     
     public func getWalletString() -> String {
         return "\(wallet)₳"
@@ -48,5 +83,24 @@ struct UserProfile {
     
     public func getLevelString() -> String{
         return "\(Int(level)) - \(Int(level.truncatingRemainder(dividingBy:1.0) * 100))%"
+    }
+}
+
+struct User {
+    let login: String
+    let id: Int
+}
+
+struct AccessToken {
+    let access_token: String
+    let expire_date: Date
+    
+    var is_valid: Bool {
+        get {
+            if expire_date > Date() {
+                return true
+            }
+            return false
+        }
     }
 }

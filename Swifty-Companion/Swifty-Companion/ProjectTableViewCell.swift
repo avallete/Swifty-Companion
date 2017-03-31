@@ -9,8 +9,17 @@
 import UIKit
 
 class ProjectTableViewCell: UITableViewCell {
+    @IBOutlet weak var projectName: UILabel!
+    @IBOutlet weak var projectScore: UILabel!
 
-    var project: Project?
+    var project: Project? {
+        didSet {
+            if project != nil {
+                projectName.text = project!.name
+                projectScore.text = project!.scoreString
+            }
+        }
+    }
 
     override func awakeFromNib() {
         super.awakeFromNib()

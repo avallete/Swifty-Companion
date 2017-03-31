@@ -7,15 +7,11 @@
 //
 
 import UIKit
+import Alamofire
 
 class ProjectTableViewDelegate: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    var data = [
-        Project(name: "This is live", score: 101, validated: true, status: "finished"),
-        Project(name: "This is l2", score: 10, validated: false, status: "finished"),
-        Project(name: "Thisve", score: 82, validated: true, status: "finished"),
-        Project(name: "Thie", score: 0, validated: false, status: "in_progress")
-    ]
+    var data: [Project] = []
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count
@@ -30,15 +26,27 @@ class ProjectTableViewDelegate: UIViewController, UITableViewDataSource, UITable
     }
 }
 
+class AchievementTableViewDelegate: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    
+    var data: [Achievement] = []
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return data.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "AchievementTableViewCell", for: indexPath) as? AchievementTableViewCell {
+            cell.achievement = data[indexPath.item]
+            return cell;
+        }
+        return UITableViewCell();
+    }
+}
+
+
 class SkillTableViewDelegate: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    var data = [
-        Skill(name: "Entreprise", score: 5.97),
-        Skill(name: "ThisIsLife", score: 12.10),
-        Skill(name: "Koko & L'asticot", score: 5.45),
-        Skill(name: "HOUnlous sla", score: 2.75),
-        Skill(name: "NONON lalala", score: 3.42)
-    ]
+    var data: [Skill] = []
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count
@@ -54,42 +62,136 @@ class SkillTableViewDelegate: UIViewController, UITableViewDataSource, UITableVi
 }
 
 
-class ProfileViewController: UIViewController {
+class ProfileViewController: UIViewController, ApiDelegate {
     let projectTableViewDelegate = ProjectTableViewDelegate()
     let skillTableViewDelegate = SkillTableViewDelegate()
+    let achievementViewDelegate = AchievementTableViewDelegate()
     
-    @IBOutlet weak var skillTableView: UITableView! {
+    var userId: Int?
+    
+    var userProfile: UserProfile? {
         didSet {
+            if userProfile != nil {
+                projectTableViewDelegate.data = userProfile!.projects
+                skillTableViewDelegate.data = userProfile!.skills
+                achievementViewDelegate.data = userProfile!.achievements
+                loginLabel.text = userProfile?.login
+                gradeLabel.text = userProfile?.getGradeString()
+                walletLabel.text = userProfile?.getWalletString()
+                positionLabel.text = userProfile?.getPositionString()
+                correctionPtsLabel.text = "\(userProfile!.correctionPts)"
+                levelLabel.text = userProfile?.getLevelString()
+                DispatchQueue.main.async {
+                    self.achievementTableView.reloadData()
+                    self.skillTableView.reloadData()
+                    self.projectTableView.reloadData()
+                }
+                Alamofire.request(userProfile!.pictureUrl, method: .get).responseData { response in
+                    if response.response?.statusCode == 200 && response.error == nil && response.data != nil {
+                        DispatchQueue.main.async {
+                            self.profileImageView.image = UIImage(data: response.data!)
+                            self.pictureLoader.stopAnimating()
+                        }
+                    }
+                    DispatchQueue.main.async {
+                        self.pictureLoader.stopAnimating()
+                    }
+                }
+            }
+        }
+    }
+
+    @IBOutlet weak var  pictureLoader: UIActivityIndicatorView!
+    @IBOutlet weak var  loginLabel: UILabel!
+    @IBOutlet weak var  gradeLabel: UILabel!
+    @IBOutlet weak var  walletLabel: UILabel!
+    @IBOutlet weak var  correctionPtsLabel: UILabel!
+    @IBOutlet weak var  positionLabel: UILabel!
+    @IBOutlet weak var  levelLabel: UILabel!
+    @IBOutlet weak var  profileImageView: UIImageView!
+    
+    @IBOutlet weak var  achievementTableView: UITableView! {
+        didSet {
+            achievementTableView.layer.borderWidth = 1
+            achievementTableView.layer.cornerRadius = 5.0
+            achievementTableView.layer.borderColor = UIColor(red: 24/255, green: 200/255, blue: 143/255, alpha: 1.0).cgColor
+            achievementTableView.delegate = self.achievementViewDelegate;
+            achievementTableView.dataSource = self.achievementViewDelegate;
+        }
+    }
+
+    @IBOutlet weak var  skillTableView: UITableView! {
+        didSet {
+            skillTableView.layer.borderWidth = 1
+            skillTableView.layer.cornerRadius = 5.0
+            skillTableView.layer.borderColor = UIColor(red: 24/255, green: 200/255, blue: 143/255, alpha: 1.0).cgColor
             skillTableView.delegate = self.skillTableViewDelegate;
             skillTableView.dataSource = self.skillTableViewDelegate;
         }
     }
     
-    @IBOutlet weak var projectTableView: UITableView! {
+    @IBOutlet weak var  projectTableView: UITableView! {
         didSet {
+            projectTableView.layer.borderWidth = 1
+            projectTableView.layer.cornerRadius = 5.0
+            projectTableView.layer.borderColor = UIColor(red: 24/255, green: 200/255, blue: 143/255, alpha: 1.0).cgColor
             projectTableView.delegate = self.projectTableViewDelegate;
             projectTableView.dataSource = self.projectTableViewDelegate;
         }
     }
-
-    @IBOutlet weak var profileImageView: UIImageView!
     
-    private func  roundImageView(imageView: UIImageView) {
+    private func        roundImageView(imageView: UIImageView) {
+        // Just turn rectangular imageView into circle
         imageView.layer.cornerRadius = imageView.frame.size.width / 2;
         imageView.clipsToBounds = true;
     }
     
-    override func viewDidLayoutSubviews() {
+    func                handleRequestError(from: String, err: Error?) {
+        if from == "getUserProfile" {
+            self.userId = nil
+            self.userProfile = nil
+            let alert = UIAlertController(title: "Request Error", message: "From: \(from) Err: Cannot retrieve user profile.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        else {
+            let alert = UIAlertController(title: "Request Error", message: "From: \(from) Err: \(err)", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    func                handleRequestSuccess(from: String, data: Any) {
+        // When token successfully retrieved. Try to get userProfile.
+        if from == "getAccessToken" {
+            if userId != nil {
+                api.getUserProfile(user_id: userId!)
+            }
+        }
+        if from == "getUserProfile" {
+            if data is UserProfile {
+                self.userProfile = data as? UserProfile
+            }
+        }
+    }
+
+    override func       viewDidAppear(_ animated: Bool) {
+        if userId != nil {
+            api.getAccessToken()
+        }
+    }
+    
+    override func       viewDidLayoutSubviews() {
+        // Round the picture image here to recalculate when screen mode (landscape/portrait) change.
         self.roundImageView(imageView: profileImageView);
     }
 
-    override func viewDidLoad() {
+    override func       viewDidLoad() {
         super.viewDidLoad()
-        
         // Do any additional setup after loading the view, typically from a nib.
     }
 
-    override func didReceiveMemoryWarning() {
+    override func       didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
