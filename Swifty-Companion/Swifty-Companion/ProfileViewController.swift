@@ -75,26 +75,26 @@ class ProfileViewController: UIViewController, ApiDelegate {
                 projectTableViewDelegate.data = userProfile!.projects
                 skillTableViewDelegate.data = userProfile!.skills
                 achievementViewDelegate.data = userProfile!.achievements
-                loginLabel.text = userProfile?.login
-                gradeLabel.text = userProfile?.getGradeString()
-                walletLabel.text = userProfile?.getWalletString()
-                positionLabel.text = userProfile?.getPositionString()
-                correctionPtsLabel.text = "\(userProfile!.correctionPts)"
-                levelLabel.text = userProfile?.getLevelString()
+                loginLabel?.text = userProfile?.login
+                gradeLabel?.text = userProfile?.getGradeString()
+                walletLabel?.text = userProfile?.getWalletString()
+                positionLabel?.text = userProfile?.getPositionString()
+                correctionPtsLabel?.text = "\(userProfile!.correctionPts)"
+                levelLabel?.text = userProfile?.getLevelString()
                 DispatchQueue.main.async {
-                    self.achievementTableView.reloadData()
-                    self.skillTableView.reloadData()
-                    self.projectTableView.reloadData()
+                    self.achievementTableView?.reloadData()
+                    self.skillTableView?.reloadData()
+                    self.projectTableView?.reloadData()
                 }
                 Alamofire.request(userProfile!.pictureUrl, method: .get).responseData { response in
                     if response.response?.statusCode == 200 && response.error == nil && response.data != nil {
                         DispatchQueue.main.async {
-                            self.profileImageView.image = UIImage(data: response.data!)
-                            self.pictureLoader.stopAnimating()
+                            self.profileImageView?.image = UIImage(data: response.data!)
+                            self.pictureLoader?.stopAnimating()
                         }
                     }
                     DispatchQueue.main.async {
-                        self.pictureLoader.stopAnimating()
+                        self.pictureLoader?.stopAnimating()
                     }
                 }
             }

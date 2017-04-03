@@ -25,6 +25,7 @@ class ResearchTableViewDelegate: UIViewController, UITableViewDataSource, UITabl
     }
 }
 
+
 class ResearchViewController: UIViewController, UISearchBarDelegate, ApiDelegate {
     var searchActive : Bool = false
     let researchTableViewDelegate = ResearchTableViewDelegate()
@@ -34,6 +35,7 @@ class ResearchViewController: UIViewController, UISearchBarDelegate, ApiDelegate
     
     @IBOutlet weak var researchBar: UISearchBar! {
         didSet {
+            researchBar.enablesReturnKeyAutomatically = false
             researchBar.delegate = self;
         }
     }
@@ -42,18 +44,6 @@ class ResearchViewController: UIViewController, UISearchBarDelegate, ApiDelegate
         didSet {
             researchTableView.delegate = researchTableViewDelegate;
             researchTableView.dataSource = researchTableViewDelegate;
-        }
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "userProfileSegue" {
-            // This segue is trigger if user click on a result into researchTableView
-            // So we hydrate our next viewController with the selected userId, allowing the next page to retrieve UserInformations.
-
-            let index = researchTableView.indexPathForSelectedRow!
-            let vc = segue.destination as! ProfileViewController
-            vc.userId = researchTableViewDelegate.filtered[index.item].id
-            api.delegate = vc
         }
     }
     
@@ -85,9 +75,10 @@ class ResearchViewController: UIViewController, UISearchBarDelegate, ApiDelegate
         // If press enter on search bar, select the first element on list and show profile.
 
         if searchBar.text != nil && researchTableViewDelegate.filtered.count > 0 {
-            let rowToSelect = IndexPath(row: 0, section: 0)
-            researchTableView.selectRow(at: rowToSelect, animated: true, scrollPosition: .top)
-            performSegue(withIdentifier: "userProfileSegue", sender: self)
+            DispatchQueue.main.async {
+                searchBar.endEditing(true)
+                self.performSegue(withIdentifier: "userProfileSegue", sender: self)
+            }
         }
     }
     
@@ -121,6 +112,24 @@ class ResearchViewController: UIViewController, UISearchBarDelegate, ApiDelegate
         }
     }
 
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "userProfileSegue" {
+            // This segue is trigger if user click on a result into researchTableView
+            // So we hydrate our next viewController with the selected userId, allowing the next page to retrieve UserInformations.
+            
+            let vc = segue.destination as! ProfileViewController
+            api.delegate = vc
+            
+            if sender != nil && sender is UITableViewCell {
+                let index = researchTableView.indexPathForSelectedRow!
+                vc.userId = researchTableViewDelegate.filtered[index.item].id
+            }
+            else {
+                vc.userId = researchTableViewDelegate.filtered[0].id
+            }
+        }
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         api.delegate = self
     }
